@@ -8,44 +8,70 @@
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap contact-info">
-        <div class="contact-info__block">
-          <p class="footer-heading">Email</p>
-          <a href="mailto:<%= site.email %>"><%= site.email %></a>
+  <section class="section contact-section">
+    <div class="wrap">
+      <div class="contact-intro">
+        <div>
+          <p class="eyebrow">A direct line to us</p>
+          <h2>Come for the scent.<br><em>Stay in touch.</em></h2>
         </div>
-        <div class="contact-info__block">
-          <p class="footer-heading">Phone</p>
-          <a href="tel:<%= site.phone.replace(/[^0-9+]/g, '') %>"><%= site.phone %></a>
-        </div>
-        <div class="contact-info__block">
-          <p class="footer-heading">Based in</p>
-          <p><%= site.address %></p>
-        </div>
-        <% if (site.whatsappNumber) { %>
-          <div class="contact-info__block">
-            <a class="btn btn--brass-outline" href="https://wa.me/<%= site.whatsappNumber %>" target="_blank" rel="noopener">Message on WhatsApp</a>
+        <p class="contact-intro__copy">
+          Have a question about a fragrance, a new arrival, or what might suit you best?
+          Follow along or reach us through the details below. We keep things personal,
+          considered, and easy.
+        </p>
+      </div>
+
+      <div class="contact-layout">
+        <div class="contact-details">
+          <div class="contact-card contact-card--primary">
+            <span class="contact-card__number">01</span>
+            <p class="footer-heading">Visit our world</p>
+            <p class="contact-card__title"><%= site.address %></p>
+            <p class="contact-card__text">A carefully selected collection, brought home for you.</p>
           </div>
-        <% } %>
-        <% if (site.social.telegram || site.social.instagram || site.social.tiktok || site.social.facebook) { %>
-          <div class="contact-info__block">
-            <p class="footer-heading">Follow us</p>
+          <div class="contact-card">
+            <span class="contact-card__number">02</span>
+            <p class="footer-heading">Call or email</p>
+            <a class="contact-card__title" href="tel:<%= site.phone.replace(/[^0-9+]/g, '') %>"><%= site.phone %></a>
+            <a class="contact-card__text" href="mailto:<%= site.email %>"><%= site.email %></a>
+          </div>
+          <% if (site.whatsappNumber) { %>
+            <div class="contact-card contact-card--wide">
+              <div>
+                <span class="contact-card__number">03</span>
+                <p class="footer-heading">Prefer a quick hello?</p>
+                <p class="contact-card__title">Chat with us on WhatsApp</p>
+              </div>
+              <a class="btn btn--brass" href="https://wa.me/<%= site.whatsappNumber %>" target="_blank" rel="noopener">Start a conversation &rarr;</a>
+            </div>
+          <% } %>
+        </div>
+
+        <aside class="contact-social">
+          <div class="contact-social__orb" aria-hidden="true"></div>
+          <p class="eyebrow">Follow the trail</p>
+          <h3>Find us<br><em>elsewhere.</em></h3>
+          <p class="contact-social__copy">New arrivals, behind-the-scenes finds, and notes from our fragrance shelf.</p>
+          <% if (site.social.telegram || site.social.instagram || site.social.tiktok || site.social.facebook) { %>
             <div class="social-links">
               <% if (site.social.instagram) { %>
-                <a href="<%= site.social.instagram %>" target="_blank" rel="noopener">Instagram</a>
+                <a href="<%= site.social.instagram %>" target="_blank" rel="noopener"><span>Instagram</span><span>&nearr;</span></a>
               <% } %>
               <% if (site.social.telegram) { %>
-                <a href="<%= site.social.telegram %>" target="_blank" rel="noopener">Telegram</a>
+                <a href="<%= site.social.telegram %>" target="_blank" rel="noopener"><span>Telegram</span><span>&nearr;</span></a>
               <% } %>
               <% if (site.social.tiktok) { %>
-                <a href="<%= site.social.tiktok %>" target="_blank" rel="noopener">TikTok</a>
+                <a href="<%= site.social.tiktok %>" target="_blank" rel="noopener"><span>TikTok</span><span>&nearr;</span></a>
               <% } %>
               <% if (site.social.facebook) { %>
-                <a href="<%= site.social.facebook %>" target="_blank" rel="noopener">Facebook</a>
+                <a href="<%= site.social.facebook %>" target="_blank" rel="noopener"><span>Facebook</span><span>&nearr;</span></a>
               <% } %>
-          </div>
-          </div>
-        <% } %>
+            </div>
+          <% } else { %>
+            <p class="contact-social__empty">Social links coming soon.</p>
+          <% } %>
+        </aside>
       </div>
     </div>
   </section>
