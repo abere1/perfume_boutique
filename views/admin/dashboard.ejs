@@ -1,0 +1,67 @@
+<%- include('../partials/head', { title: 'Dashboard' }) %>
+<%- include('../partials/admin-nav') %>
+
+  <div class="wrap">
+    <% if (added) { %><p class="form-success">Fragrance added.</p><% } %>
+    <% if (updated) { %><p class="form-success">Fragrance updated.</p><% } %>
+    <% if (deleted) { %><p class="form-success">Fragrance removed.</p><% } %>
+
+    <div class="admin-toolbar">
+      <div>
+        <h1>Your catalog</h1>
+        <p class="admin-subtitle"><%= perfumes.length %> fragrance<%= perfumes.length === 1 ? '' : 's' %> listed</p>
+      </div>
+      <a class="btn btn--brass" href="/admin/perfumes/new">+ Add fragrance</a>
+    </div>
+
+    <% if (perfumes.length === 0) { %>
+      <div class="empty-state">
+        <p>Your catalog is empty. Add your first fragrance to get it live on the site.</p>
+        <a class="btn btn--brass" href="/admin/perfumes/new">+ Add fragrance</a>
+      </div>
+    <% } else { %>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Fragrance</th>
+              <th>Brand</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Featured</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% perfumes.forEach(function(p) { %>
+              <tr>
+                <td>
+                  <a class="table-link" href="/perfume/<%= p.id %>" target="_blank" rel="noopener"><%= p.name %></a>
+                </td>
+                <td><%= p.brand %></td>
+                <td><%= site.currency %><%= Number(p.price).toFixed(2) %></td>
+                <td>
+                  <span class="stock-pill stock-pill--<%= p.stock %>">
+                    <%= p.stock === 'in_stock' ? 'In stock' : p.stock === 'low_stock' ? 'Low stock' : 'Out of stock' %>
+                  </span>
+                </td>
+                <td><%= p.featured ? 'Yes' : '&mdash;' %></td>
+                <td class="admin-table__actions">
+                  <a class="text-link" href="/admin/perfumes/<%= p.id %>/edit">Edit</a>
+                  <form method="POST" action="/admin/perfumes/<%= p.id %>/delete" data-confirm="Remove &ldquo;<%= p.name %>&rdquo; from the catalog?">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <button type="submit" class="link-button link-button--danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+  </main>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

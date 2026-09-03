@@ -1,0 +1,13 @@
+<%- include('partials/head', { title: 'Forbidden' }) %>
+<%- include('partials/nav') %>
+
+  <section class="section not-found">
+    <div class="wrap" style="text-align:center;">
+      <p class="eyebrow">403</p>
+      <h1>Security check failed.</h1>
+      <p class="section__intro"><%= typeof message !== 'undefined' && message ? message : 'Your request was blocked because the security token was invalid or missing.' %></p>
+      <a class="btn btn--brass" href="/">Back to the collection</a>
+    </div>
+  </section>
+
+<%- include('partials/footer') %>

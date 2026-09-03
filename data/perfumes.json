@@ -1,0 +1,19 @@
+[
+  {
+    "id": "c1eb0e79-4609-4346-b27c-688d2b6fa4d2",
+    "name": "Velvet Oud",
+    "brand": "Maison Noir",
+    "gender": "unisex",
+    "category": "Eau de Parfum",
+    "sizeMl": 100,
+    "price": 89,
+    "stock": "in_stock",
+    "featured": true,
+    "topNotes": "Saffron, Bergamot, Pink Pepper",
+    "heartNotes": "Rose, Oud, Cedarwood",
+    "baseNotes": "Amber, Musk, Sandalwood",
+    "description": "A deep, smoky oud softened with rose and a bright citrus opening. Long-lasting and rich, built for cold evenings.",
+    "image": "",
+    "createdAt": "2026-07-26T07:38:27.044Z"
+  }
+]

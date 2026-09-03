@@ -1,0 +1,27 @@
+<a class="p-card" href="/perfume/<%= perfume.id %>">
+  <div class="p-card__image">
+    <% if (perfume.image) { %>
+      <img src="<%= perfume.image %>" alt="<%= perfume.brand %> <%= perfume.name %>" loading="lazy" />
+    <% } else { %>
+      <div class="p-card__placeholder" aria-hidden="true">
+        <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+          <rect x="24" y="6" width="12" height="9" rx="1.5"></rect>
+          <rect x="27" y="2" width="6" height="6" rx="1"></rect>
+          <path d="M17 21 Q17 15.5 22 15.5 H38 Q43 15.5 43 21 V78 Q43 85 36 85 H24 Q17 85 17 78 Z"></path>
+        </svg>
+      </div>
+    <% } %>
+    <% if (perfume.stock === 'out_of_stock') { %>
+      <span class="p-card__tag p-card__tag--out">Out of stock</span>
+    <% } else if (perfume.stock === 'low_stock') { %>
+      <span class="p-card__tag p-card__tag--low">Low stock</span>
+    <% } %>
+  </div>
+  <div class="p-card__body">
+    <p class="p-card__brand"><%= perfume.brand %></p>
+    <h3 class="p-card__name"><%= perfume.name %></h3>
+    <p class="p-card__meta"><%= perfume.category %> &middot; <%= perfume.sizeMl %>ml</p>
+    <p class="p-card__price"><%= Number(perfume.price).toFixed(2) %><%= site.currency %></p>
+    
+  </div>
+</a>

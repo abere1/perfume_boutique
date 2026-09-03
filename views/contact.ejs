@@ -1,0 +1,53 @@
+<%- include('partials/head', { title: 'Contact' }) %>
+<%- include('partials/nav') %>
+
+  <section class="page-header">
+    <div class="wrap">
+      <p class="eyebrow">Get in touch</p>
+      <h1>Contact us</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap contact-info">
+        <div class="contact-info__block">
+          <p class="footer-heading">Email</p>
+          <a href="mailto:<%= site.email %>"><%= site.email %></a>
+        </div>
+        <div class="contact-info__block">
+          <p class="footer-heading">Phone</p>
+          <a href="tel:<%= site.phone.replace(/[^0-9+]/g, '') %>"><%= site.phone %></a>
+        </div>
+        <div class="contact-info__block">
+          <p class="footer-heading">Based in</p>
+          <p><%= site.address %></p>
+        </div>
+        <% if (site.whatsappNumber) { %>
+          <div class="contact-info__block">
+            <a class="btn btn--brass-outline" href="https://wa.me/<%= site.whatsappNumber %>" target="_blank" rel="noopener">Message on WhatsApp</a>
+          </div>
+        <% } %>
+        <% if (site.social.telegram || site.social.instagram || site.social.tiktok || site.social.facebook) { %>
+          <div class="contact-info__block">
+            <p class="footer-heading">Follow us</p>
+            <div class="social-links">
+              <% if (site.social.instagram) { %>
+                <a href="<%= site.social.instagram %>" target="_blank" rel="noopener">Instagram</a>
+              <% } %>
+              <% if (site.social.telegram) { %>
+                <a href="<%= site.social.telegram %>" target="_blank" rel="noopener">Telegram</a>
+              <% } %>
+              <% if (site.social.tiktok) { %>
+                <a href="<%= site.social.tiktok %>" target="_blank" rel="noopener">TikTok</a>
+              <% } %>
+              <% if (site.social.facebook) { %>
+                <a href="<%= site.social.facebook %>" target="_blank" rel="noopener">Facebook</a>
+              <% } %>
+          </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+<%- include('partials/footer') %>

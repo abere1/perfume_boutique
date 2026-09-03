@@ -1,0 +1,31 @@
+<%- include('../partials/head', { title: 'Admin sign in' }) %>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <a class="wordmark" href="/"><%= site.name %></a>
+      <p class="auth-subtitle">Admin sign in</p>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p class="form-error"><%= error %></p>
+      <% } %>
+
+      <form class="stacked-form" method="POST" action="/admin/login">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <label>
+          Username
+          <input type="text" name="username" required autofocus autocomplete="username" />
+        </label>
+        <label>
+          Password
+          <input type="password" name="password" required autocomplete="current-password" />
+        </label>
+        <button type="submit" class="btn btn--brass btn--full">Sign in</button>
+      </form>
+
+      <a class="text-link auth-back" href="/">&larr; Back to site</a>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<%- include('../partials/head', { title: 'Inquiries' }) %>
+<%- include('../partials/admin-nav') %>
+
+  <div class="wrap">
+    <h1>Inquiries</h1>
+    <p class="admin-subtitle"><%= inquiries.length %> message<%= inquiries.length === 1 ? '' : 's' %> received</p>
+
+    <% if (inquiries.length === 0) { %>
+      <div class="empty-state">
+        <p>No messages yet. Inquiries from the contact page and product pages will show up here.</p>
+      </div>
+    <% } else { %>
+      <div class="inquiry-list">
+        <% inquiries.forEach(function(i) { %>
+          <div class="inquiry-card <%= i.read ? '' : 'inquiry-card--unread' %>">
+            <div class="inquiry-card__top">
+              <div>
+                <p class="inquiry-card__name">
+                  <%= i.name %>
+                  <% if (!i.read) { %><span class="badge badge--inline">New</span><% } %>
+                </p>
+                <p class="inquiry-card__contact"><%= i.contact %></p>
+              </div>
+              <p class="inquiry-card__date"><%= new Date(i.createdAt).toLocaleString() %></p>
+            </div>
+
+            <% if (i.perfumeName) { %>
+              <p class="inquiry-card__product">Re: <%= i.perfumeName %></p>
+            <% } %>
+
+            <% if (i.message) { %>
+              <p class="inquiry-card__message"><%= i.message %></p>
+            <% } %>
+
+            <div class="inquiry-card__actions">
+              <% if (!i.read) { %>
+                <form method="POST" action="/admin/inquiries/<%= i.id %>/read">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  <button type="submit" class="link-button">Mark as read</button>
+                </form>
+              <% } %>
+              <form method="POST" action="/admin/inquiries/<%= i.id %>/delete" data-confirm="Delete this message?">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <button type="submit" class="link-button link-button--danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+  </main>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

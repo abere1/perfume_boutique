@@ -1,0 +1,28 @@
+{
+  "name": "perfume-boutique",
+  "version": "1.0.0",
+  "description": "A catalog website for showcasing and selling imported perfumes, with an admin panel for managing listings.",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^13.0.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^6.0.1",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.1",
+    "helmet": "^7.1.0",
+    "multer": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

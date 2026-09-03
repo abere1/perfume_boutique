@@ -1,0 +1,56 @@
+  </main>
+
+  <footer class="site-footer">
+    <svg class="trail trail--footer" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,30 C150,5 300,55 450,30 S750,5 900,30 S1100,55 1200,30" />
+    </svg>
+    <div class="wrap site-footer__grid">
+      <div class="footer-brand">
+        <p class="wordmark wordmark--footer"><%= site.name %></p>
+        <p class="footer-tagline"><%= site.tagline %></p>
+      </div>
+
+      <div class="footer-col">
+        <p class="footer-heading">Explore</p>
+        <a href="/shop">Shop the collection</a>
+        <a href="/about">About us</a>
+        <a href="/contact">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <p class="footer-heading">Reach us</p>
+        <a href="mailto:<%= site.email %>"><%= site.email %></a>
+        <a href="tel:<%= site.phone.replace(/[^0-9+]/g, '') %>"><%= site.phone %></a>
+        <p class="footer-address"><%= site.address %></p>
+      </div>
+
+      <% if (site.whatsappNumber || site.social.instagram || site.social.telegram || site.social.tiktok || site.social.facebook) { %>
+        <div class="footer-col">
+          <p class="footer-heading">Follow &amp; message</p>
+          <% if (site.whatsappNumber) { %>
+            <a href="https://wa.me/<%= site.whatsappNumber %>" target="_blank" rel="noopener">WhatsApp</a>
+          <% } %>
+          <% if (site.social.instagram) { %>
+            <a href="<%= site.social.instagram %>" target="_blank" rel="noopener">Instagram</a>
+          <% } %>
+          <% if (site.social.telegram) { %>
+            <a href="<%= site.social.telegram %>" target="_blank" rel="noopener">Telegram</a>
+          <% } %>
+          <% if (site.social.tiktok) { %>
+            <a href="<%= site.social.tiktok %>" target="_blank" rel="noopener">TikTok</a>
+          <% } %>
+          <% if (site.social.facebook) { %>
+            <a href="<%= site.social.facebook %>" target="_blank" rel="noopener">Facebook</a>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>&copy; <%= site.year %> <%= site.name %>. All rights reserved.</p>
+      <p class="footer-note">Imported fragrances, sold subject to availability.</p>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

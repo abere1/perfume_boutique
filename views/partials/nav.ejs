@@ -1,0 +1,20 @@
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="wordmark" href="/"><%= site.name %></a>
+      <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main" aria-expanded="false">
+        <a href="/" class="<%= currentPath === '/' ? 'is-active' : '' %>">Home</a>
+        <a href="/shop" class="<%= currentPath.indexOf('/shop') === 0 || currentPath.indexOf('/perfume/') === 0 ? 'is-active' : '' %>">Shop</a>
+        <a href="/about" class="<%= currentPath === '/about' ? 'is-active' : '' %>">About</a>
+        <a href="/contact" class="<%= currentPath === '/contact' ? 'is-active' : '' %>">Contact</a>
+        <% if (isAdmin) { %>
+          <a href="/admin" class="<%= currentPath === '/admin' ? 'is-active' : '' %>">Admin</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+  <main id="main">

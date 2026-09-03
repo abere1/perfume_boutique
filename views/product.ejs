@@ -1,0 +1,82 @@
+<%
+  function splitNotes(str) {
+    return (str || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  var waMessage = 'Hi! I\'m interested in the ' + perfume.brand + ' ' + perfume.name + ' (' + site.currency + Number(perfume.price).toFixed(2) + '). Is it available?';
+%>
+<%- include('partials/head', { title: perfume.brand + ' ' + perfume.name }) %>
+<%- include('partials/nav') %>
+
+  <section class="section product">
+    <div class="wrap product__grid">
+      <div class="product__image">
+        <% if (perfume.image) { %>
+          <img src="<%= perfume.image %>" alt="<%= perfume.brand %> <%= perfume.name %> - <%= perfume.category %> (<%=perfume.sizeMl%>ml)" />
+        <% } else { %>
+          <div class="product__placeholder" aria-hidden="true">
+            <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+              <rect x="24" y="6" width="12" height="9" rx="1.5"></rect>
+              <rect x="27" y="2" width="6" height="6" rx="1"></rect>
+              <path d="M17 21 Q17 15.5 22 15.5 H38 Q43 15.5 43 21 V78 Q43 85 36 85 H24 Q17 85 17 78 Z"></path>
+            </svg>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="product__details">
+        <p class="p-card__brand"><%= perfume.brand %></p>
+        <h1 class="product__name"><%= perfume.name %></h1>
+        <p class="product__meta"><%= perfume.category %> &middot; <%= perfume.sizeMl %>ml &middot; <%= perfume.gender.charAt(0).toUpperCase() + perfume.gender.slice(1) %></p>
+        <p class="product__price"><%= Number(perfume.price).toFixed(2) %><%= site.currency %></p>
+
+        <p class="stock-line stock-line--<%= perfume.stock %>">
+          <% if (perfume.stock === 'in_stock') { %>In stock
+          <% } else if (perfume.stock === 'low_stock') { %>Low stock &mdash; limited bottles left
+          <% } else { %>Currently out of stock
+          <% } %>
+        </p>
+
+        <% if (perfume.description) { %>
+          <p class="product__description"><%= perfume.description %></p>
+        <% } %>
+
+        <% var top = splitNotes(perfume.topNotes), heart = splitNotes(perfume.heartNotes), base = splitNotes(perfume.baseNotes); %>
+        <% if (top.length || heart.length || base.length) { %>
+          <div class="notes-pyramid">
+            <p class="notes-pyramid__heading">Fragrance notes</p>
+            <% if (top.length) { %>
+              <div class="notes-row">
+                <span class="notes-row__label">Top</span>
+                <span class="notes-row__list"><%= top.join(', ') %></span>
+              </div>
+            <% } %>
+            <% if (heart.length) { %>
+              <div class="notes-row">
+                <span class="notes-row__label">Heart</span>
+                <span class="notes-row__list"><%= heart.join(', ') %></span>
+              </div>
+            <% } %>
+            <% if (base.length) { %>
+              <div class="notes-row">
+                <span class="notes-row__label">Base</span>
+                <span class="notes-row__list"><%= base.join(', ') %></span>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+
+        <div class="product__actions">
+          <% if (site.whatsappNumber) { %>
+            <a class="btn btn--brass" href="https://wa.me/<%= site.whatsappNumber %>?text=<%= encodeURIComponent(waMessage) %>" target="_blank" rel="noopener">
+              Order via WhatsApp
+            </a>
+          <% } %>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+<%- include('partials/footer') %>

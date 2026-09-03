@@ -1,0 +1,106 @@
+<%- include('../partials/head', { title: heading }) %>
+<%- include('../partials/admin-nav') %>
+
+  <div class="wrap wrap--narrow">
+    <a class="text-link" href="/admin">&larr; Back to dashboard</a>
+    <h1><%= heading %></h1>
+
+    <% if (error) { %>
+      <p class="form-error"><%= error %></p>
+    <% } %>
+
+    <form class="stacked-form admin-form" method="POST" action="<%= formAction %>" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="form-row">
+        <label>
+          Name
+          <input type="text" name="name" value="<%= perfume.name || '' %>" required />
+        </label>
+        <label>
+          Brand
+          <input type="text" name="brand" value="<%= perfume.brand || '' %>" required />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>
+          Gender
+          <select name="gender">
+            <option value="unisex" <%= perfume.gender === 'unisex' || !perfume.gender ? 'selected' : '' %>>Unisex</option>
+            <option value="women" <%= perfume.gender === 'women' ? 'selected' : '' %>>Women</option>
+            <option value="men" <%= perfume.gender === 'men' ? 'selected' : '' %>>Men</option>
+          </select>
+        </label>
+        <label>
+          Category
+          <input type="text" name="category" value="<%= perfume.category || 'Eau de Parfum' %>" placeholder="Eau de Parfum, Eau de Toilette..." />
+        </label>
+      </div>
+
+      <div class="form-row form-row--three">
+        <label>
+          Size (ml)
+          <input type="number" name="sizeMl" value="<%= perfume.sizeMl || '' %>" min="0" step="1" aria-label="Size in milliliters" />
+        </label>
+        <label>
+          Price (<%= site.currency %>)
+          <input type="number" name="price" value="<%= perfume.price || '' %>" min="0" step="0.01" required aria-label="Price in <%= site.currency %>" />
+        </label>
+        <label>
+          Stock status
+          <select name="stock" aria-label="Stock status">
+            <option value="in_stock" <%= perfume.stock === 'in_stock' || !perfume.stock ? 'selected' : '' %>>In stock</option>
+            <option value="low_stock" <%= perfume.stock === 'low_stock' ? 'selected' : '' %>>Low stock</option>
+            <option value="out_of_stock" <%= perfume.stock === 'out_of_stock' ? 'selected' : '' %>>Out of stock</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        Description
+        <textarea name="description" rows="4"><%= perfume.description || '' %></textarea>
+      </label>
+
+      <p class="form-section-label">Fragrance notes (comma-separated)</p>
+      <div class="form-row form-row--three">
+        <label>
+          Top notes
+          <input type="text" name="topNotes" value="<%= perfume.topNotes || '' %>" placeholder="Bergamot, Lemon" />
+        </label>
+        <label>
+          Heart notes
+          <input type="text" name="heartNotes" value="<%= perfume.heartNotes || '' %>" placeholder="Jasmine, Rose" />
+        </label>
+        <label>
+          Base notes
+          <input type="text" name="baseNotes" value="<%= perfume.baseNotes || '' %>" placeholder="Musk, Amber" />
+        </label>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" name="featured" <%= perfume.featured ? 'checked' : '' %> />
+        Feature on the homepage
+      </label>
+
+      <label>
+        Photo
+        <input type="file" name="image" accept="image/*" />
+      </label>
+      <% if (perfume.image) { %>
+        <div class="current-image">
+          <img src="<%= perfume.image %>" alt="Current photo" />
+          <span>Current photo &mdash; uploading a new one will replace it.</span>
+        </div>
+      <% } %>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--brass"><%= perfume.id ? 'Save changes' : 'Add fragrance' %></button>
+        <a class="btn btn--ghost" href="/admin">Cancel</a>
+      </div>
+    </form>
+  </div>
+  </main>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

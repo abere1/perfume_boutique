@@ -1,0 +1,72 @@
+<%- include('partials/head', { title: '' }) %>
+<%- include('partials/nav') %>
+
+  <section class="hero">
+    <svg class="trail trail--hero" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,100 C200,40 350,170 550,100 S850,30 1000,100 S1150,160 1200,110" />
+    </svg>
+    <div class="wrap hero__inner">
+      <p class="eyebrow">Imported fragrance &middot; hand-selected</p>
+      <h1 class="hero__headline">Scents that <em>traveled</em> to find you.</h1>
+      <p class="hero__sub"><%= site.tagline %>. A small, considered collection sourced abroad and brought home.</p>
+      <div class="hero__actions">
+        <a class="btn btn--brass" href="/shop">View the collection</a>
+        <% if (site.whatsappNumber) { %>
+          <a class="btn btn--ghost-dark" href="https://wa.me/<%= site.whatsappNumber %>" target="_blank" rel="noopener">Message us on WhatsApp</a>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-strip">
+    <div class="wrap trust-strip__grid">
+      <div class="trust-item">
+        <p class="trust-item__title">Imported, not manufactured</p>
+        <p class="trust-item__body">We source finished fragrances from abroad, so what arrives is the original bottle.</p>
+      </div>
+      <div class="trust-item">
+        <p class="trust-item__title">Small, considered stock</p>
+        <p class="trust-item__body">Every fragrance is chosen personally, not bought in bulk to fill shelf space.</p>
+      </div>
+      <div class="trust-item">
+        <p class="trust-item__title">Order by message</p>
+        <p class="trust-item__body">Reach out directly and we'll confirm availability and delivery together.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__heading">
+        <h2>In the collection now</h2>
+        <a class="text-link" href="/shop">Browse all &rarr;</a>
+      </div>
+
+      <% if (featured.length === 0) { %>
+        <p class="empty-note">No fragrances are marked as featured yet. Add some from the admin dashboard.</p>
+      <% } else { %>
+        <div class="p-grid">
+          <% featured.forEach(function(perfume) { %>
+            <%- include('partials/perfume-card', { perfume }) %>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <% if (latest.length > 0) { %>
+    <section class="section section--muted">
+      <div class="wrap">
+        <div class="section__heading">
+          <h2>Recently arrived</h2>
+        </div>
+        <div class="p-grid">
+          <% latest.slice(0, 4).forEach(function(perfume) { %>
+            <%- include('partials/perfume-card', { perfume }) %>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
+<%- include('partials/footer') %>

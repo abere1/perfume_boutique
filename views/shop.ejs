@@ -1,0 +1,63 @@
+<%- include('partials/head', { title: 'Shop' }) %>
+<%- include('partials/nav') %>
+
+  <section class="page-header">
+    <div class="wrap">
+      <p class="eyebrow">The full collection</p>
+      <h1>Shop fragrances</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <form class="filter-bar" method="GET" action="/shop">
+        <input
+          type="text"
+          name="search"
+          placeholder="Search by name or brand&hellip;"
+          value="<%= filters.search %>"
+          aria-label="Search fragrances"
+        />
+
+        <select name="gender" aria-label="Filter by gender">
+          <option value="" <%= filters.gender === '' ? 'selected' : '' %>>All</option>
+          <option value="women" <%= filters.gender === 'women' ? 'selected' : '' %>>Women</option>
+          <option value="men" <%= filters.gender === 'men' ? 'selected' : '' %>>Men</option>
+          <option value="unisex" <%= filters.gender === 'unisex' ? 'selected' : '' %>>Unisex</option>
+        </select>
+
+        <select name="brand" aria-label="Filter by brand">
+          <option value="">All brands</option>
+          <% brands.forEach(function(b) { %>
+            <option value="<%= b %>" <%= filters.brand === b ? 'selected' : '' %>><%= b %></option>
+          <% }); %>
+        </select>
+
+        <select name="sort" aria-label="Sort">
+          <option value="" <%= filters.sort === '' ? 'selected' : '' %>>Newest</option>
+          <option value="price_asc" <%= filters.sort === 'price_asc' ? 'selected' : '' %>>Price: low to high</option>
+          <option value="price_desc" <%= filters.sort === 'price_desc' ? 'selected' : '' %>>Price: high to low</option>
+          <option value="name_asc" <%= filters.sort === 'name_asc' ? 'selected' : '' %>>Name: A to Z</option>
+        </select>
+
+        <button type="submit" class="btn btn--brass-outline">Apply</button>
+        <% if (filters.gender || filters.brand || filters.search || filters.sort) { %>
+          <a class="text-link" href="/shop">Clear filters</a>
+        <% } %>
+      </form>
+
+      <p class="result-count"><%= perfumes.length %> fragrance<%= perfumes.length === 1 ? '' : 's' %> found</p>
+
+      <% if (perfumes.length === 0) { %>
+        <p class="empty-note">Nothing matches those filters yet. Try clearing them, or check back soon &mdash; the collection is updated regularly.</p>
+      <% } else { %>
+        <div class="p-grid">
+          <% perfumes.forEach(function(perfume) { %>
+            <%- include('partials/perfume-card', { perfume }) %>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+<%- include('partials/footer') %>

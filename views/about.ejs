@@ -1,0 +1,44 @@
+<%- include('partials/head', { title: 'About' }) %>
+<%- include('partials/nav') %>
+
+  <section class="page-header">
+    <div class="wrap">
+      <p class="eyebrow">Our story</p>
+      <h1>About <%= site.name %></h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <p>
+        <%= site.name %> started with a simple frustration: the fragrances worth wearing were
+        rarely the ones sitting on a local shelf. So instead of manufacturing a scent of our own,
+        we do the searching &mdash; sourcing fragrances from abroad, checking them over, and
+        bringing them home for people who'd rather not do that legwork themselves.
+      </p>
+      <p>
+        Every bottle in the collection was chosen one at a time, not ordered in bulk to fill
+        space. That means the selection is smaller than a department store counter, but it also
+        means we can tell you exactly where something came from and why it's here.
+      </p>
+      <p>
+        We don't run a large storefront or a call center &mdash; just a small, direct line to
+        whoever is managing the collection. If you have a question about a fragrance, its notes,
+        or whether it's in stock, reach out from the <a href="/contact">contact page</a> or
+        message us directly, and you'll hear back from a person, not a script.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="wrap wrap--narrow" style="text-align:center;">
+      <h2>Ready to look around?</h2>
+      <p class="section__intro">Browse the current collection, or get in touch if you're after something specific.</p>
+      <div class="hero__actions" style="justify-content:center;">
+        <a class="btn btn--brass" href="/shop">View the collection</a>
+        <a class="btn btn--ghost" href="/contact">Contact us</a>
+      </div>
+    </div>
+  </section>
+
+<%- include('partials/footer') %>

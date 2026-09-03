@@ -1,0 +1,16 @@
+  <header class="admin-bar">
+    <div class="wrap admin-bar__inner">
+      <a class="wordmark wordmark--admin" href="/admin">
+        <%= site.name %> <span class="admin-tag">Admin</span>
+      </a>
+      <nav class="admin-nav" aria-label="Admin">
+        <a href="/admin" class="<%= currentPath === '/admin' ? 'is-active' : '' %>">Dashboard</a>
+        <a href="/" class="<%= currentPath === '/home' ? 'is-active' : '' %>" rel="noopener">View site &#8599;</a>
+        <form action="/admin/logout" method="POST" class="logout-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <button type="submit" class="link-button">Log out</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="admin-main">
