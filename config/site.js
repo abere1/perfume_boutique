@@ -4,9 +4,9 @@
 module.exports = {
   name: process.env.SITE_NAME || 'Roha perfumes',
   tagline: process.env.SITE_TAGLINE || 'Authentic imported fragrances, curated for you',
-  currency: process.env.CURRENCY_SYMBOL || 'Birr',
+  currency: process.env.CURRENCY_SYMBOL || ' Birr',
   whatsappNumber: (process.env.WHATSAPP_NUMBER || '+251 913616101').replace(/[^0-9]/g, ''),
-  email: process.env.CONTACT_EMAIL || 'rohaperfumes@example.com',
+  email: process.env.CONTACT_EMAIL || 'rohaperfumes@gmail.com',
   phone: process.env.CONTACT_PHONE || '+251 913616101',
   address: process.env.ADDRESS || 'Addis Ababa, Ethiopia',
   social: {
