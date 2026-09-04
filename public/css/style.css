@@ -163,6 +163,7 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
   padding: 0.85rem 1.5rem;
   font-family: var(--font-body);
   font-weight: 600;
@@ -336,8 +337,8 @@ textarea:focus-visible {
    ========================================================================== */
 .p-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 1.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 2vw, 1.75rem);
 }
 .p-card {
   display: block;
@@ -373,7 +374,7 @@ textarea:focus-visible {
   top: 0.6rem;
   left: 0.6rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.3rem 0.55rem;
@@ -383,18 +384,31 @@ textarea:focus-visible {
 .p-card__tag--low { background: var(--oxblood); }
 .p-card__tag--out { background: rgba(36, 31, 28, 0.72); }
 
-.p-card__body { padding: 1.1rem 1.2rem 1.4rem; }
+.p-card__body { padding: clamp(8px, 2vw, 1.1rem) clamp(8px, 2vw, 1.2rem) clamp(8px, 2vw, 1.4rem); }
 .p-card__brand {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: clamp(0.75rem, 1.4vw, 0.82rem);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--oxblood);
   margin: 0 0 0.3rem;
 }
-.p-card__name { font-size: 1.2rem; margin: 0 0 0.35rem; }
-.p-card__meta { font-size: 0.82rem; color: rgba(36, 31, 28, 0.6); margin: 0 0 0.55rem; }
-.p-card__price { font-family: var(--font-mono); font-weight: 500; font-size: 1rem; margin: 0; }
+.p-card__name {
+  font-size: clamp(0.85rem, 2.2vw, 1.2rem);
+  margin: 0 0 0.35rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.p-card__meta { font-size: clamp(0.75rem, 1.5vw, 0.82rem); color: rgba(36, 31, 28, 0.6); margin: 0 0 0.55rem; }
+.p-card__price { font-family: var(--font-mono); font-weight: 500; font-size: clamp(0.75rem, 1.8vw, 1rem); margin: 0; }
+
+/* Keep the four-column layout until its cards would approach the readable width floor. */
+@media (max-width: 600px) {
+  .p-grid { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+}
 
 /* ==========================================================================
    Shop filter bar
