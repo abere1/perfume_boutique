@@ -74,6 +74,7 @@ You do not need to touch any code to change these.
 ```
 perfume-boutique/
 ├── server.js              Express app entry point
+├── api/index.js           Vercel serverless function entry point
 ├── config/site.js          Reads .env into one config object used by every view
 ├── db/store.js             All Supabase data access
 ├── supabase/schema.sql     Tables to run in the Supabase SQL editor
