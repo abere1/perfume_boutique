@@ -124,10 +124,10 @@ This is a standard Node.js/Express app, so it runs on most Node hosts
    uploaded images to Supabase Storage.
 3. Serve the site over HTTPS (most hosts do this for you automatically).
 
-Login sessions are kept in memory, which is fine for the single-process
-setup this project runs by default. If you later scale to multiple server
-processes (e.g. a host that auto-scales or runs a process cluster), admins
-would need to reuse the same process to stay logged in — swap in a
-persistent session store (e.g. `connect-sqlite3`) at that point.
+Login sessions are stored in the Supabase `sessions` table. This is required
+for serverless deployments such as Vercel, where separate requests can run in
+different instances. If you created your Supabase schema before this table was
+added, run the updated `supabase/schema.sql` (the `create table if not exists`
+statements are safe to rerun).
 
 If you'd like help wiring this up on a specific host, just ask.

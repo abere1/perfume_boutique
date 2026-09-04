@@ -2,6 +2,7 @@
 
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
+const session = require('express-session');
 const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -14,6 +15,54 @@ if (!supabaseUrl || !supabaseKey) {
 const db = createClient(supabaseUrl, supabaseKey, {
   auth: { autoRefreshToken: false, persistSession: false }
 });
+
+class SupabaseSessionStore extends session.Store {
+  get(sid, callback) {
+    db.from('sessions')
+      .select('data, expires_at')
+      .eq('sid', sid)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (error) return callback(error);
+        if (!data || new Date(data.expires_at).getTime() <= Date.now()) {
+          return callback(null, null);
+        }
+        return callback(null, typeof data.data === 'string' ? JSON.parse(data.data) : data.data);
+      })
+      .catch(callback);
+  }
+
+  set(sid, sessionData, callback) {
+    const expiresAt = sessionData.cookie && sessionData.cookie.expires
+      ? new Date(sessionData.cookie.expires).toISOString()
+      : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    db.from('sessions')
+      .upsert({ sid, data: sessionData, expires_at: expiresAt })
+      .then(({ error }) => callback(error || null))
+      .catch(callback);
+  }
+
+  destroy(sid, callback) {
+    db.from('sessions')
+      .delete()
+      .eq('sid', sid)
+      .then(({ error }) => callback(error || null))
+      .catch(callback);
+  }
+
+  touch(sid, sessionData, callback) {
+    const expiresAt = sessionData.cookie && sessionData.cookie.expires
+      ? new Date(sessionData.cookie.expires).toISOString()
+      : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    db.from('sessions')
+      .update({ expires_at: expiresAt })
+      .eq('sid', sid)
+      .then(({ error }) => callback(error || null))
+      .catch(callback);
+  }
+}
 
 function newId() {
   return crypto.randomUUID();
@@ -229,6 +278,7 @@ async function ensureDefaultAdmin() {
 
 module.exports = {
   initialize,
+  createSessionStore: () => new SupabaseSessionStore(),
   perfumes: {
     getAll: getAllPerfumes, getFeatured: getFeaturedPerfumes, getById: getPerfumeById,
     getBrands, create: createPerfume, update: updatePerfume, remove: removePerfume
