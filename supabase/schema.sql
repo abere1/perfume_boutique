@@ -32,6 +32,12 @@ create table if not exists public.admin (
   password_hash text not null
 );
 
+create table if not exists public.sessions (
+  sid text primary key,
+  data jsonb not null,
+  expires_at timestamptz not null
+);
+
 alter table public.perfumes enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.admin enable row level security;

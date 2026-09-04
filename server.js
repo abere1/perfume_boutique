@@ -16,6 +16,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const sessionSecret = process.env.SESSION_SECRET || '';
 
+// Vercel terminates TLS before forwarding requests to the function. Trust its
+// proxy so express-session can correctly set secure cookies.
+if (process.env.VERCEL) app.set('trust proxy', 1);
+
 if (!sessionSecret || sessionSecret.trim().length < 32 || /change-this|replace-with|example/i.test(sessionSecret)) {
   console.error('Security error: set a strong SESSION_SECRET in .env before starting the app. Use a random 32+ character string.');
   process.exit(1);
@@ -46,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: sessionSecret,
+    store: store.createSessionStore(),
     resave: false,
     saveUninitialized: false,
     cookie: {
