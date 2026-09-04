@@ -20,8 +20,7 @@ Nothing here stops you from adding a cart and payments later; see
   links on the contact page
 - Admin-only login to add/edit/delete fragrances, including photo upload
 - An admin panel for managing the fragrance catalog
-- No database server to install — data is stored in plain JSON files under
-  `/data`, so setup is just `npm install` and go
+- Cloud data storage with Supabase
 
 ## Requirements
 
@@ -33,7 +32,7 @@ Nothing here stops you from adding a cart and payments later; see
 # 1. Install dependencies
 npm install
 
-# 2. Copy the example environment file and edit it
+# 2. Copy the example environment file and edit it, including Supabase values
 cp .env.example .env
 
 # 3. Start the server
@@ -43,6 +42,11 @@ npm start
 Then open **http://localhost:3000** in your browser. The admin panel is at
 **http://localhost:3000/admin/login** — sign in with the `ADMIN_USERNAME`
 and `ADMIN_PASSWORD` you set in `.env`.
+
+Before starting the app, create a Supabase project, run
+`supabase/schema.sql` in its SQL editor, and set `SUPABASE_URL` and
+`SUPABASE_SERVICE_ROLE_KEY` in `.env`. Keep the service-role key server-side
+only; never expose it in browser code.
 
 The first time the server runs, it also seeds three sample fragrances so the
 site isn't empty. Delete or edit them from the admin dashboard once you've
@@ -55,7 +59,7 @@ Everything you're likely to want to change lives in `.env` (copy it from
 
 | Variable | What it controls |
 |---|---|
-| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Your admin login. Change the password here, then delete `data/admin.json` and restart to apply a changed password. |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Your admin login. The account is created once in Supabase when the admin table is empty. |
 | `SESSION_SECRET` | A long random string used to keep logins secure. Change it to anything random before going live. |
 | `SITE_NAME` / `SITE_TAGLINE` | Your shop name and tagline, shown across the site. |
 | `CURRENCY_SYMBOL` | Shown before every price, e.g. `$`, `€`, or a currency code like `ETB`. |
@@ -71,8 +75,8 @@ You do not need to touch any code to change these.
 perfume-boutique/
 ├── server.js              Express app entry point
 ├── config/site.js          Reads .env into one config object used by every view
-├── db/store.js             All data access (perfumes, inquiries, admin account)
-├── data/                   JSON data files (created automatically)
+├── db/store.js             All Supabase data access
+├── supabase/schema.sql     Tables to run in the Supabase SQL editor
 ├── middleware/auth.js      Protects /admin routes
 ├── routes/
 │   ├── public.js           Home, shop, product, about, contact
@@ -102,9 +106,7 @@ straightforward to grow:
   `users` collection and a public registration/login flow later is additive
   — it won't require reworking the existing routes.
 - **A real database.** If your catalog grows large or you need multiple
-  admins editing simultaneously, swap the contents of `db/store.js` for
-  calls to a real database. Nothing else in the app talks to the data files
-  directly, so this is a contained change.
+  admins editing simultaneously,   Supabase is already used by the app; keep the schema and store API stable.
 - **Cart & payments.** Since ordering currently happens over WhatsApp/message,
   there's no cart or checkout. Adding one is a matter of a new `cart`
   session field and a checkout route/view — the product data model already
@@ -117,9 +119,8 @@ This is a standard Node.js/Express app, so it runs on most Node hosts
 
 1. Set real values in `.env` on the host — especially `ADMIN_PASSWORD`,
    `SESSION_SECRET`, and `NODE_ENV=production`.
-2. Make sure the `data/` and `public/uploads/` folders persist between
-   deploys (some free hosting tiers wipe the filesystem on every deploy —
-   look for a "persistent disk" or "volume" option).
+2. Make sure the `public/uploads/` folder persists between deploys, or move
+   uploaded images to Supabase Storage.
 3. Serve the site over HTTPS (most hosts do this for you automatically).
 
 Login sessions are kept in memory, which is fine for the single-process

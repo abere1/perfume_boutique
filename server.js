@@ -25,9 +25,6 @@ if (!sessionSecret || sessionSecret.trim().length < 32 || /change-this|replace-w
 const uploadsDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
-// Create the admin account from .env the very first time the server runs.
-store.admin.ensureDefaultAdmin();
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -88,6 +85,15 @@ app.use((err, req, res, next) => {
   return res.status(500).render('500');
 });
 
-app.listen(PORT, () => {
-  console.log(`Perfume boutique running at http://localhost:${PORT}`);
+async function start() {
+  await store.initialize();
+  await store.admin.ensureDefaultAdmin();
+  app.listen(PORT, () => {
+    console.log(`Perfume boutique running at http://localhost:${PORT}`);
+  });
+}
+
+start().catch((err) => {
+  console.error('Could not start the application:', err);
+  process.exit(1);
 });

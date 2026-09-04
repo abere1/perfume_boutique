@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^13.0.3",
     "dotenv": "^16.4.5",
     "ejs": "^6.0.1",
     "express": "^4.19.2",
     "express-rate-limit": "^7.4.0",
     "express-session": "^1.18.1",
     "helmet": "^7.1.0",
-    "multer": "^2.2.0"
+    "multer": "^2.2.0",
+    "@supabase/supabase-js": "^2.57.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
