@@ -4,7 +4,6 @@ const express = require('express');
 const session = require('express-session');
 const helmet = require('helmet');
 const path = require('path');
-const fs = require('fs');
 
 const store = require('./db/store');
 const siteConfig = require('./config/site');
@@ -24,10 +23,6 @@ if (!sessionSecret || sessionSecret.trim().length < 32 || /change-this|replace-w
   console.error('Security error: set a strong SESSION_SECRET in .env before starting the app. Use a random 32+ character string.');
   process.exit(1);
 }
-
-// Make sure the uploads folder exists before anything tries to write to it.
-const uploadsDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

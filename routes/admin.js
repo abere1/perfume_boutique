@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const fs = require('fs');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const rateLimit = require('express-rate-limit');
@@ -17,21 +16,11 @@ function asyncHandler(handler) {
 // Image upload setup
 // ---------------------------------------------------------------------------
 
-const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadsDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`);
-  }
-});
-
 const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 const allowedExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif']);
 
 const uploadImage = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const extension = path.extname(file.originalname || '').toLowerCase();
@@ -80,13 +69,6 @@ function validatePrice(value) {
 function validateSizeMl(value) {
   const size = Number(value);
   return !isNaN(size) && size > 0;
-}
-
-function isValidImagePath(imagePath) {
-  if (!imagePath || typeof imagePath !== 'string') return false;
-  if (!imagePath.startsWith('/uploads/')) return false;
-  if (imagePath.includes('..') || imagePath.includes('~')) return false;
-  return true;
 }
 
 router.get('/login', (req, res) => {
@@ -164,7 +146,7 @@ router.post('/perfumes', handleUpload, requireCsrfToken, asyncHandler(async (req
     });
   }
 
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
+  const image = req.file ? (await store.images.upload(req.file)) || '' : '';
   await store.perfumes.create({ ...req.body, image, featured: req.body.featured === 'on' });
   res.redirect('/admin?added=1');
 }));
@@ -206,15 +188,15 @@ router.post('/perfumes/:id', handleUpload, requireCsrfToken, asyncHandler(async 
     });
   }
 
-  const image = req.file ? `/uploads/${req.file.filename}` : undefined;
+  const image = req.file ? await store.images.upload(req.file) : undefined;
   await store.perfumes.update(existing.id, { ...req.body, image, featured: req.body.featured === 'on' });
   res.redirect('/admin?updated=1');
 }));
 
 router.post('/perfumes/:id/delete', requireCsrfToken, asyncHandler(async (req, res) => {
   const removed = await store.perfumes.remove(req.params.id);
-  if (removed && removed.image && isValidImagePath(removed.image)) {
-    fs.unlink(path.join(__dirname, '..', 'public', removed.image), () => {});
+  if (removed && removed.image) {
+    await store.images.remove(removed.image);
   }
   res.redirect('/admin?deleted=1');
 }));

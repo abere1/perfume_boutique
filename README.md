@@ -45,8 +45,9 @@ and `ADMIN_PASSWORD` you set in `.env`.
 
 Before starting the app, create a Supabase project, run
 `supabase/schema.sql` in its SQL editor, and set `SUPABASE_URL` and
-`SUPABASE_SERVICE_ROLE_KEY` in `.env`. Keep the service-role key server-side
-only; never expose it in browser code.
+`SUPABASE_SERVICE_ROLE_KEY` in `.env`. The schema also creates the public
+`product-images` Storage bucket used for perfume photos. Keep the service-role
+key server-side only; never expose it in browser code.
 
 The first time the server runs, it also seeds three sample fragrances so the
 site isn't empty. Delete or edit them from the admin dashboard once you've
@@ -120,8 +121,8 @@ This is a standard Node.js/Express app, so it runs on most Node hosts
 
 1. Set real values in `.env` on the host — especially `ADMIN_PASSWORD`,
    `SESSION_SECRET`, and `NODE_ENV=production`.
-2. Make sure the `public/uploads/` folder persists between deploys, or move
-   uploaded images to Supabase Storage.
+2. Uploaded images are stored in the Supabase `product-images` Storage bucket,
+   so they persist across Vercel deployments.
 3. Serve the site over HTTPS (most hosts do this for you automatically).
 
 Login sessions are stored in the Supabase `sessions` table. This is required

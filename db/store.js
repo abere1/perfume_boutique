@@ -1,6 +1,7 @@
 // Supabase-backed data store.
 
 const crypto = require('crypto');
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const { createClient } = require('@supabase/supabase-js');
@@ -62,6 +63,37 @@ class SupabaseSessionStore extends session.Store {
       .then(({ error }) => callback(error || null))
       .catch(callback);
   }
+}
+
+const BUCKET_NAME = 'product-images';
+
+async function uploadPerfumeImage(file) {
+  if (!file) return null;
+
+  const ext = path.extname(file.originalname || '').toLowerCase();
+  const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+  const { error } = await db.storage.from(BUCKET_NAME).upload(filename, file.buffer, {
+    contentType: file.mimetype,
+    upsert: false
+  });
+
+  if (error) throw new Error('Image upload failed. Please try again.');
+
+  const { data } = db.storage.from(BUCKET_NAME).getPublicUrl(filename);
+  return data.publicUrl;
+}
+
+async function removePerfumeImage(imageUrl) {
+  if (!imageUrl || typeof imageUrl !== 'string') return;
+
+  const marker = `/storage/v1/object/public/${BUCKET_NAME}/`;
+  const markerIndex = imageUrl.indexOf(marker);
+  if (markerIndex === -1) return;
+
+  const filename = decodeURIComponent(imageUrl.slice(markerIndex + marker.length));
+  if (!filename) return;
+  const { error } = await db.storage.from(BUCKET_NAME).remove([filename]);
+  if (error) throw error;
 }
 
 function newId() {
@@ -287,5 +319,6 @@ module.exports = {
     getAll: getAllInquiries, create: createInquiry, markRead: markInquiryRead,
     remove: removeInquiry, unreadCount: unreadInquiryCount
   },
-  admin: { findByUsername: findAdminByUsername, ensureDefaultAdmin }
+  admin: { findByUsername: findAdminByUsername, ensureDefaultAdmin },
+  images: { upload: uploadPerfumeImage, remove: removePerfumeImage }
 };

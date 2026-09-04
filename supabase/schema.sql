@@ -38,6 +38,10 @@ create table if not exists public.sessions (
   expires_at timestamptz not null
 );
 
+insert into storage.buckets (id, name, public)
+values ('product-images', 'product-images', true)
+on conflict (id) do update set public = true;
+
 alter table public.perfumes enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.admin enable row level security;
