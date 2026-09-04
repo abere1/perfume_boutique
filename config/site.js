@@ -6,7 +6,7 @@ module.exports = {
   tagline: process.env.SITE_TAGLINE || 'Authentic imported fragrances, curated for you',
   currency: process.env.CURRENCY_SYMBOL || 'Birr',
   whatsappNumber: (process.env.WHATSAPP_NUMBER || '+251 913616101').replace(/[^0-9]/g, ''),
-  email: process.env.CONTACT_EMAIL || 'hello@example.com',
+  email: process.env.CONTACT_EMAIL || 'rohaperfumes@example.com',
   phone: process.env.CONTACT_PHONE || '+251 913616101',
   address: process.env.ADDRESS || 'Addis Ababa, Ethiopia',
   social: {
