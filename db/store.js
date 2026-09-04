@@ -64,6 +64,34 @@ class SupabaseSessionStore extends session.Store {
   }
 }
 
+const BUCKET_NAME = 'product-images';
+
+async function uploadPerfumeImage(file) {
+  if (!file) return null;
+
+  const path = require('path');
+  const ext = path.extname(file.originalname).toLowerCase();
+  const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+
+  const { error } = await db.storage
+    .from(BUCKET_NAME)
+    .upload(filename, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false
+    });
+
+  if (error) throw new Error('Image upload failed. Please try again.');
+
+  const { data } = db.storage.from(BUCKET_NAME).getPublicUrl(filename);
+  return data.publicUrl;
+}
+
+async function removePerfumeImage(imageUrl) {
+  if (!imageUrl || !imageUrl.includes(BUCKET_NAME)) return;
+  const filename = imageUrl.split('/').pop();
+  await db.storage.from(BUCKET_NAME).remove([filename]);
+}
+
 function newId() {
   return crypto.randomUUID();
 }
@@ -274,9 +302,8 @@ async function ensureDefaultAdmin() {
   const passwordHash = bcrypt.hashSync(password, 10);
   throwIfError(await db.from('admin').insert({ username, password_hash: passwordHash }));
   console.log(`Admin account created for username "${username}".`);
-}
 
-module.exports = {
+  module.exports = {
   initialize,
   createSessionStore: () => new SupabaseSessionStore(),
   perfumes: {
@@ -287,5 +314,6 @@ module.exports = {
     getAll: getAllInquiries, create: createInquiry, markRead: markInquiryRead,
     remove: removeInquiry, unreadCount: unreadInquiryCount
   },
-  admin: { findByUsername: findAdminByUsername, ensureDefaultAdmin }
+  admin: { findByUsername: findAdminByUsername, ensureDefaultAdmin },
+  images: { upload: uploadPerfumeImage, remove: removePerfumeImage }   // ← new
 };

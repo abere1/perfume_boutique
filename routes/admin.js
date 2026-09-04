@@ -17,15 +17,17 @@ function asyncHandler(handler) {
 // Image upload setup
 // ---------------------------------------------------------------------------
 
-const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
+const { createClient } = require('@supabase/supabase-js');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadsDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`);
-  }
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+const BUCKET_NAME = 'product-images';
+
+// Store the upload in memory instead of on disk — Vercel's filesystem is read-only.
+const storage = multer.memoryStorage();
 
 const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 const allowedExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif']);
@@ -54,6 +56,24 @@ function handleUpload(req, res, next) {
     }
     next();
   });
+}
+async function uploadToSupabase(file) {
+  if (!file) return null;
+
+  const ext = path.extname(file.originalname).toLowerCase();
+  const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+
+  const { error } = await supabase.storage
+    .from(BUCKET_NAME)
+    .upload(filename, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false
+    });
+
+  if (error) throw new Error('Image upload failed. Please try again.');
+
+  const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename);
+  return data.publicUrl;
 }
 
 // ---------------------------------------------------------------------------
@@ -164,8 +184,19 @@ router.post('/perfumes', handleUpload, requireCsrfToken, asyncHandler(async (req
     });
   }
 
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
-  await store.perfumes.create({ ...req.body, image, featured: req.body.featured === 'on' });
+ let image = '';
+try {
+  image = (await store.images.upload(req.file)) || '';
+} catch (err) {
+  return res.status(400).render('admin/perfume-form', {
+    perfume: req.body,
+    error: err.message,
+    formAction: '/admin/perfumes',
+    heading: 'Add a fragrance',
+    csrfToken: req.session.csrfToken
+  });
+}
+await store.perfumes.create({ ...req.body, image, featured: req.body.featured === 'on' });
   res.redirect('/admin?added=1');
 }));
 
@@ -213,12 +244,11 @@ router.post('/perfumes/:id', handleUpload, requireCsrfToken, asyncHandler(async 
 
 router.post('/perfumes/:id/delete', requireCsrfToken, asyncHandler(async (req, res) => {
   const removed = await store.perfumes.remove(req.params.id);
-  if (removed && removed.image && isValidImagePath(removed.image)) {
-    fs.unlink(path.join(__dirname, '..', 'public', removed.image), () => {});
+  if (removed && removed.image) {
+    await store.images.remove(removed.image);
   }
   res.redirect('/admin?deleted=1');
 }));
-
 // ---------------------------------------------------------------------------
 // Inquiries inbox
 // ---------------------------------------------------------------------------
